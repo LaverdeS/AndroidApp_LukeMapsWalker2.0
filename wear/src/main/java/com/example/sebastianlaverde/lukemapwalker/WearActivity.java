@@ -1,5 +1,9 @@
 package com.example.sebastianlaverde.lukemapwalker;
 
+import android.app.Notification;
+import android.app.Service;
+import android.os.IBinder;
+import android.util.Log;
 import android.support.wear.widget.BoxInsetLayout;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,6 +13,8 @@ import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.google.android.gms.wearable.DataClient;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,6 +35,7 @@ public class WearActivity extends WearableActivity implements SensorEventListene
     private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
     private final static int SENS_SIGNIFICANT_MOTION = Sensor.TYPE_SIGNIFICANT_MOTION;
     private ScheduledExecutorService mScheduler;
+    //private DeviceClient client;
 
     SensorManager mSensorManager;
 
@@ -38,7 +45,7 @@ public class WearActivity extends WearableActivity implements SensorEventListene
         setContentView(R.layout.activity_wear);
         BoxInsetLayout wear_layout = findViewById(R.id.wear_layout);
 
-        //client = DeviceClient.getInstance(this) // useful later
+        //client = Dev.getInstance(this);
 
         accelerometerTextView = (TextView) findViewById(R.id.accelerometer_text);
         gyroscopeTextView     = (TextView) findViewById(R.id.gyroscope_text);
@@ -83,6 +90,7 @@ public class WearActivity extends WearableActivity implements SensorEventListene
             case SENS_SIGNIFICANT_MOTION:
                 significantMotionText.setText("Significant Motion: " + event.values);
         }
+        //client.sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
     }
 
     @Override
