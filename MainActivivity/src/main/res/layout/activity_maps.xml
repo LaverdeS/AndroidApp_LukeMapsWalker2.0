@@ -9,63 +9,128 @@
     android:baselineAligned="false"
     tools:context="com.example.sebastianlaverde.lukemapwalker.MainActivivity.MapsActivity">
 
-    <Button
-        android:id="@+id/toSV"
+    <ViewSwitcher
+        android:id="@+id/switcher"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="0dp"
-        android:alpha="0.75"
-        android:background="@color/colorAccent"
-        android:fadingEdge="horizontal|vertical"
-        android:padding="0dp"
-        android:text="Enter/Exit StreetView"
-        android:textAllCaps="false"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/playPause"
-        android:layout_above="@id/toSV"
-        android:layout_alignParentStart="true"
-        android:layout_margin="0dp"
-        android:alpha="0.75"
-        android:background="@color/colorPrimaryDark"
-        android:clickable="true"
-        android:contentDescription="Play/Pause"
-        android:cursorVisible="false"
-        android:drawableLeft="@android:drawable/ic_media_play"
-        android:drawableRight="@android:drawable/ic_media_pause"
-        android:ellipsize="middle"
-        android:fadingEdge="horizontal|vertical"
-        android:paddingStart="22dp"
-        android:paddingLeft="22dp"
-        android:paddingTop="0dp"
-        android:paddingEnd="22dp"
-        android:paddingRight="22dp"
-        android:paddingBottom="0dp" />
+        <RelativeLayout
+          android:id="@+id/map_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="0dp"
+          android:layout_marginBottom="0dp"
+          android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/streetView_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:orientation="vertical" />
+            <com.google.android.gms.maps.MapView
+               android:id="@+id/map_view"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
+            <Button
+               android:id="@+id/enterSV"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_alignParentStart="true"
+               android:layout_alignParentBottom="true"
+               android:layout_margin="0dp"
+               android:alpha="0.75"
+               android:background="@color/colorAccent"
+               android:fadingEdge="horizontal|vertical"
+               android:padding="0dp"
+               android:text="Enter StreetView"
+               android:textAllCaps="false"
+               android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+               android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+          android:id="@+id/streetView_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="0dp"
+          android:layout_marginBottom="0dp"
+          android:orientation="vertical" >
+
+            <com.google.android.gms.maps.StreetViewPanoramaView
+                android:id="@+id/streetView_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <Button
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/playPause"
+                    android:layout_above="@id/exitSV"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="0dp"
+                    android:alpha="0.75"
+                    android:background="@color/colorPrimaryDark"
+                    android:contentDescription="Play/Pause"
+                    android:drawableStart="@android:drawable/ic_media_play"
+                    android:drawableEnd="@android:drawable/ic_media_pause"
+                    android:ellipsize="middle"
+                    android:fadingEdge="horizontal|vertical"
+                    android:paddingStart="22dp"
+                    android:paddingLeft="22dp"
+                    android:paddingTop="0dp"
+                    android:paddingEnd="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingBottom="0dp" />
+
+            <Button
+                    android:id="@+id/exitSV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="0dp"
+                    android:alpha="0.75"
+                    android:background="@color/colorAccent"
+                    android:fadingEdge="horizontal|vertical"
+                    android:padding="0dp"
+                    android:text="Exit StreetView"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+                    android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
 
+        </RelativeLayout>
+
+        <!--<RelativeLayout
+          android:id="@+id/map_layout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="0dp"
+          android:layout_marginBottom="0dp"
+          android:orientation="vertical" >
+
+            <com.google.android.gms.maps.MapView
+               android:id="@+id/map_view"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_alignParentTop="true"
+               android:layout_centerHorizontal="true"
+               android:layout_marginTop="0dp"
+               android:layout_marginBottom="0dp" />
+
+            <Button
+               android:id="@+id/enterSV"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_alignParentStart="true"
+               android:layout_alignParentBottom="true"
+               android:layout_margin="0dp"
+               android:alpha="0.75"
+               android:background="@color/colorAccent"
+               android:fadingEdge="horizontal|vertical"
+               android:padding="0dp"
+               android:text="Enter StreetView"
+               android:textAllCaps="false"
+               android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+               android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        </RelativeLayout>-->
+    </ViewSwitcher>
 </RelativeLayout>

@@ -1,5 +1,12 @@
 package com.example.sebastianlaverde.lukemapwalker;
 
+/**
+ * Code strongly inspired from https://github.com/pocmo/SensorDashboard
+ * Consulting also the following web pages:
+ *  https://developers.google.com/android/reference/com/google/android/gms/wearable/DataMapItem
+ *  https://developer.android.com/training/wearables/data-layer/assets
+ *  https://stackoverflow.com/questions/39954776/send-accelerometer-data-from-android-wear-to-smarthphone
+ */
 import android.app.Notification;
 import android.app.Service;
 import android.os.IBinder;
@@ -14,7 +21,12 @@ import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.ScheduledExecutorService;
@@ -35,7 +47,12 @@ public class WearActivity extends WearableActivity implements SensorEventListene
     private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
     private final static int SENS_SIGNIFICANT_MOTION = Sensor.TYPE_SIGNIFICANT_MOTION;
     private ScheduledExecutorService mScheduler;
-    //private DeviceClient client;
+    private DataClient client;
+    private PutDataMapRequest accVec;
+    private PutDataMapRequest gyroVec;
+    private PutDataMapRequest orientVec;
+    private float[] rotMat;
+    private float[] orientation;
 
     SensorManager mSensorManager;
 
@@ -44,8 +61,6 @@ public class WearActivity extends WearableActivity implements SensorEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wear);
         BoxInsetLayout wear_layout = findViewById(R.id.wear_layout);
-
-        //client = Dev.getInstance(this);
 
         accelerometerTextView = (TextView) findViewById(R.id.accelerometer_text);
         gyroscopeTextView     = (TextView) findViewById(R.id.gyroscope_text);
@@ -75,17 +90,30 @@ public class WearActivity extends WearableActivity implements SensorEventListene
                 accelerometerTextView.setText("Accelerometer (no gravity):\n X " + new DecimalFormat("#.###").format(event.values[0]) +
                         " Y " +  new DecimalFormat("#.###").format(event.values[1]) +
                         " Z " +  new DecimalFormat("#.###").format(event.values[2]));
+                accVec = PutDataMapRequest.create("/accVec");
+                accVec.getDataMap().putFloatArray("accVec", event.values);
+                PutDataRequest accVecSendable = accVec.asPutDataRequest();
+                Task<DataItem> putAccVecTask = Wearable.getDataClient(this).putDataItem(accVecSendable);
                 break;
             case SENS_GYROSCOPE:
                 gyroscopeTextView.setText("Gyroscope:\n X " + new DecimalFormat("#.###").format(event.values[0]) +
                         " Y " +  new DecimalFormat("#.###").format(event.values[1]) +
                         " Z " +  new DecimalFormat("#.###").format(event.values[2]));
+                gyroVec = PutDataMapRequest.create("/gyroVec");
+                gyroVec.getDataMap().putFloatArray("gyroVec", event.values);
+                PutDataRequest gyroVecSendable = gyroVec.asPutDataRequest();
+                Task<DataItem> putGyroVecTask = Wearable.getDataClient(this).putDataItem(gyroVecSendable);
                 break;
             case SENS_ROTATION_VECTOR:
-                rotVecTextView.setText("Rotation Vector:\n X " + new DecimalFormat("#.###").format(event.values[0]) +
-                        " Y " +  new DecimalFormat("#.###").format(event.values[1]) +
-                        " Z " +  new DecimalFormat("#.###").format(event.values[2]) +
-                        " Scalar " + new DecimalFormat("#.###").format(event.values[3]));
+                SensorManager.getRotationMatrixFromVector(rotMat, event.values);
+                SensorManager.getOrientation(orientation, rotMat);
+                rotVecTextView.setText("Orientation:\n Azimuth " + new DecimalFormat("#.###").format(event.values[0]) +
+                        " Pitch " +  new DecimalFormat("#.###").format(event.values[1]) +
+                        " Roll "  +  new DecimalFormat("#.###").format(event.values[2]));
+                orientVec = PutDataMapRequest.create("/orientVec");
+                orientVec.getDataMap().putFloatArray("orientVec", orientation);
+                PutDataRequest orientVecSendable = orientVec.asPutDataRequest();
+                Task<DataItem> putOrientVecTask = Wearable.getDataClient(this).putDataItem(orientVecSendable);
                 break;
             case SENS_SIGNIFICANT_MOTION:
                 significantMotionText.setText("Significant Motion: " + event.values);
